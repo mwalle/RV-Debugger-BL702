@@ -84,10 +84,12 @@ void uart_set_dtr_rts(uint8_t index, uint8_t dtr, uint8_t rts) {
   uart_rts[index] = rts;
 }
 void uart_dtr_init(uint8_t index) {
-  gpio_set_mode(uart_dtr[index], GPIO_OUTPUT_MODE);
+  //gpio_set_mode(uart_dtr[index], GPIO_OUTPUT_MODE);
+  gpio_set_mode(uart_dtr[index], GPIO_INPUT_PD_MODE);
 }
 void uart_rts_init(uint8_t index) {
-  gpio_set_mode(uart_rts[index], GPIO_OUTPUT_MODE);
+  //gpio_set_mode(uart_rts[index], GPIO_OUTPUT_MODE);
+  gpio_set_mode(uart_rts[index], GPIO_INPUT_PP_MODE);
 }
 void uart_dtr_deinit(uint8_t index) {
   gpio_set_mode(uart_dtr[index], GPIO_INPUT_MODE);
@@ -96,10 +98,20 @@ void uart_rts_deinit(uint8_t index) {
   gpio_set_mode(uart_rts[index], GPIO_INPUT_MODE);
 }
 void dtr_pin_set(uint8_t index, uint8_t status) {
-  gpio_write(uart_dtr[index], status);
+  if (!status) {
+    gpio_set_mode(uart_dtr[index], GPIO_INPUT_PD_MODE);
+  } else {
+    gpio_set_mode(uart_dtr[index], GPIO_OUTPUT_MODE);
+    gpio_write(uart_dtr[index], 1);
+  }
 }
 void rts_pin_set(uint8_t index, uint8_t status) {
-  gpio_write(uart_rts[index], status);
+  if (status) {
+    gpio_set_mode(uart_rts[index], GPIO_INPUT_PP_MODE);
+  } else {
+    gpio_set_mode(uart_rts[index], GPIO_OUTPUT_MODE);
+    gpio_write(uart_rts[index], 0);
+  }
 }
 
 static dma_control_data_t uart_dma_ctrl_cfg = {

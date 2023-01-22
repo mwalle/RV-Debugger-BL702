@@ -78,6 +78,8 @@ int main(void) {
   uart_ringbuffer_init();
   uart_set_dtr_rts(0, UART0_DTR_PIN, UART0_RTS_PIN);
   uart_set_dtr_rts(1, UART1_DTR_PIN, UART1_RTS_PIN);
+  uart_rts_init(0);
+  uart_rts_init(1);
   uart_dtr_init(0);
   uart_dtr_init(1);
   uart_init(0, uart_irq_callback);
